@@ -1,91 +1,15 @@
-// swift-tools-version:6.0
-
+// swift-tools-version: 6.0
 import PackageDescription
 
 let package = Package(
     name: "Cuckoo",
-    platforms: [
-        .iOS("13.0"),
-        .tvOS("13.0"),
-        .macOS("11.0"),
-        .watchOS("8.0"),
-    ],
-    products: [
-        .library(
-            name: "Cuckoo",
-            targets: ["Cuckoo"]
-        ),
-        .executable(
-            name: "CuckooGenerator",
-            targets: ["CuckooGenerator"]
-        ),
-        .plugin(
-            name: "CuckooPluginSingleFile",
-            targets: ["CuckooPluginSingleFile"]
-        ),
-        .plugin(
-            name: "CuckooPluginModular",
-            targets: ["CuckooPluginModular"]
-        ),
-        // FIXME: Currently unusable because Xcode doesn't allow using prebuild commands with executable targets
-        // .plugin(
-        //     name: "CuckooPluginIndividualFiles",
-        //     targets: ["CuckooPluginIndividualFiles"]
-        // ),
-    ],
-    dependencies: [
-        // Any dependency changes must also be reflected in Generator/Project.swift.
-        .package(url: "https://github.com/nvzqz/FileKit", from: "6.1.0"),
-        .package(url: "https://github.com/kylef/Stencil", from: "0.15.1"),
-        .package(url: "https://github.com/swiftlang/swift-syntax", "600.1.0"..<"603.0.0"),
-        // .package(url: "https://github.com/swiftlang/swift-format", "600.1.0"..<"603.0.0"),
-        .package(url: "https://github.com/apple/swift-argument-parser", from: "1.7.0"),
-        .package(url: "https://github.com/LebJe/TOMLKit", from: "0.6.0"),
-        .package(url: "https://github.com/tuist/XcodeProj", from: "9.14.0"),
-        .package(url: "https://github.com/onevcat/Rainbow", from: "4.2.1"),
-    ],
+    platforms: [.iOS(.v13), .tvOS(.v13), .macOS(.v11), .watchOS(.v8)],
+    products: [.library(name: "Cuckoo", targets: ["Cuckoo"])],
     targets: [
         .target(
             name: "Cuckoo",
-            path: "Source"
-        ),
-        .testTarget(
-            name: "CuckooTests",
-            dependencies: ["Cuckoo"],
-            path: "Tests"
-        ),
-        .executableTarget(
-            name: "CuckooGenerator",
-            dependencies: [
-                .product(name: "FileKit", package: "FileKit"),
-                .product(name: "Stencil", package: "Stencil"),
-                // .product(name: "SwiftFormat", package: "swift-format"),
-                .product(name: "SwiftSyntax", package: "swift-syntax"),
-                .product(name: "SwiftParser", package: "swift-syntax"),
-                .product(name: "ArgumentParser", package: "swift-argument-parser"),
-                .product(name: "TOMLKit", package: "TOMLKit"),
-                .product(name: "XcodeProj", package: "XcodeProj"),
-                .product(name: "Rainbow", package: "Rainbow"),
-            ],
-            path: "Generator/Sources"
-        ),
-        .plugin(
-            name: "CuckooPluginSingleFile",
-            capability: .buildTool(),
-            dependencies: ["CuckooGenerator"],
-            path: "Generator/Plugin/File"
-        ),
-        .plugin(
-            name: "CuckooPluginModular",
-            capability: .buildTool(),
-            dependencies: ["CuckooGenerator"],
-            path: "Generator/Plugin/Modular"
-        ),
-        // .plugin(
-        //     name: "CuckooPluginIndividualFiles",
-        //     capability: .buildTool(),
-        //     dependencies: ["CuckooGenerator"],
-        //     path: "Generator/Plugin/Directory"
-        // ),
+            path: "Source",
+            swiftSettings: [.enableUpcomingFeature("NonisolatedNonsendingByDefault")]
+        )
     ]
 )
